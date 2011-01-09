@@ -6,7 +6,7 @@ KTCsvParser is a read-only parser for comma separated value data written in Obje
 KTCsvParser is not limited to comma separated values. Users of the parser can set the value separate to any character. Also, users can set the quote character used when dealing with embedded quotes.
 
 Using KTCsvParser
-=================
+-----------------
 
 Coming soon.
 
