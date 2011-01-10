@@ -44,7 +44,6 @@
 {
    _isInputStreamOpen = NO;
    _position = -MAX_BUFFER_SIZE;
-   _virtualPosition = 0;
    _bufferLength = 0;
 }
 
@@ -77,10 +76,11 @@
 - (BOOL)fillInternalBuffer
 {
    BOOL success = NO;
+   memset(_buffer, 0, sizeof(uint8_t) * MAX_BUFFER_SIZE);
    if ([_inputStream hasBytesAvailable] == YES) {
       _bufferLength = [_inputStream read:_buffer maxLength:MAX_BUFFER_SIZE];
       _position = 0;
-      success = YES;
+      success = (_bufferLength > 0);
    }
    return success;
 }
@@ -102,7 +102,9 @@
       }
       firstBufferRead = (firstBufferRead < bytesLeft) ? firstBufferRead : bytesLeft;
       if (firstBufferRead > 0) {
-         [data appendBytes:&_buffer[_position] length:firstBufferRead];
+         if (_position < _bufferLength) {
+            [data appendBytes:&_buffer[_position] length:firstBufferRead];
+         }
          bytesLeft -= firstBufferRead;
       }
       
@@ -130,14 +132,9 @@
 
 - (BOOL)isAtEnd
 {
-   BOOL isAtEnd = YES;
-   if (_position < _bufferLength) {
-      isAtEnd = NO;
-   } else if ([_inputStream hasBytesAvailable]) {
-      isAtEnd = NO;
-   }
+   if (_position > _bufferLength) return YES;
    
-   return isAtEnd;
+   return NO;
 }
 
 

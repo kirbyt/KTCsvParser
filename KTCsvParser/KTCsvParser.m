@@ -112,15 +112,6 @@
    return self;
 }
 
-- (NSString *)getNextCharacterWithAdvancePosition:(BOOL)advancePosition
-{
-   NSString *character = nil;
-   BOOL success = [_reader read:&character maxLength:1];
-   NSLog(@"success: %i", success);
-   
-   return character;
-}
-
 - (BOOL)readNextCharacter:(NSString **)character
 {
    // Retrieve the next character. Note that the

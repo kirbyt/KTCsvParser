@@ -38,8 +38,7 @@
    
    uint8_t _buffer[MAX_BUFFER_SIZE];
    NSInteger _position;
-   NSUInteger _virtualPosition;
-   NSUInteger _bufferLength;
+   NSInteger _bufferLength;
 }
 
 @property (nonatomic, retain) NSInputStream *inputStream;
