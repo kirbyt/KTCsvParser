@@ -45,7 +45,10 @@
 @property (nonatomic, copy) NSString *valueSeparator;
 @property (nonatomic, copy) NSString *quoteCharacter;
 
+- (id)initWithData:(NSData *)data;
+- (id)initWithFileAtPath:(NSString *)path;
 - (id)initWithInputStream:(NSInputStream *)inputStream;
+- (id)initWithURL:(NSURL *)url;
 - (BOOL)readLine;
 - (NSArray *)values;
 

@@ -66,11 +66,47 @@
    [self setQuoteCharacter:@"\""];
 }
 
+- (id)initWithData:(NSData *)data
+{
+   self = [super init];
+   if (self) {
+      NSInputStream *inputStream = [[NSInputStream alloc] initWithData:data];
+      _reader = [[KTBufferedStreamReader alloc] initWithInputStream:inputStream];
+      [inputStream release];
+      [self setup];
+   }
+   return self;
+}
+
+- (id)initWithFileAtPath:(NSString *)path
+{
+   self = [super init];
+   if (self) {
+      NSInputStream *inputStream = [[NSInputStream alloc] initWithFileAtPath:path];
+      _reader = [[KTBufferedStreamReader alloc] initWithInputStream:inputStream];
+      [inputStream release];
+      [self setup];
+   }
+   return self;
+}
+
 - (id)initWithInputStream:(NSInputStream *)inputStream
 {
    self = [super init];
    if (self) {
       _reader = [[KTBufferedStreamReader alloc] initWithInputStream:inputStream];
+      [self setup];
+   }
+   return self;
+}
+
+- (id)initWithURL:(NSURL *)url
+{
+   self = [super init];
+   if (self) {
+      NSInputStream *inputStream = [[NSInputStream alloc] initWithURL:url];
+      _reader = [[KTBufferedStreamReader alloc] initWithInputStream:inputStream];
+      [inputStream release];
       [self setup];
    }
    return self;
