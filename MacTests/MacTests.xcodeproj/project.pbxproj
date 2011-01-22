@@ -14,6 +14,7 @@
 		688A536A12EA89560011CF27 /* SenTestingKit.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 688A533B12EA88CA0011CF27 /* SenTestingKit.framework */; };
 		688A54C912EB76A20011CF27 /* KTBufferedStreamReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 688A54C612EB76A20011CF27 /* KTBufferedStreamReader.m */; };
 		688A54CA12EB76A20011CF27 /* KTCsvParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 688A54C812EB76A20011CF27 /* KTCsvParser.m */; };
+		688A54CE12EB76FB0011CF27 /* KTCsvParserTestCases.m in Sources */ = {isa = PBXBuildFile; fileRef = 688A54CD12EB76FB0011CF27 /* KTCsvParserTestCases.m */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
@@ -47,6 +48,8 @@
 		688A54C612EB76A20011CF27 /* KTBufferedStreamReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KTBufferedStreamReader.m; sourceTree = "<group>"; };
 		688A54C712EB76A20011CF27 /* KTCsvParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KTCsvParser.h; sourceTree = "<group>"; };
 		688A54C812EB76A20011CF27 /* KTCsvParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KTCsvParser.m; sourceTree = "<group>"; };
+		688A54CC12EB76FB0011CF27 /* KTCsvParserTestCases.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KTCsvParserTestCases.h; sourceTree = "<group>"; };
+		688A54CD12EB76FB0011CF27 /* KTCsvParserTestCases.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KTCsvParserTestCases.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* MacTests.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacTests.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -136,6 +139,8 @@
 		688A533312EA87F10011CF27 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				688A54CC12EB76FB0011CF27 /* KTCsvParserTestCases.h */,
+				688A54CD12EB76FB0011CF27 /* KTCsvParserTestCases.m */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -217,6 +222,7 @@
 				688A532512EA87930011CF27 /* GHUnitTestMain.m in Sources */,
 				688A54C912EB76A20011CF27 /* KTBufferedStreamReader.m in Sources */,
 				688A54CA12EB76A20011CF27 /* KTCsvParser.m in Sources */,
+				688A54CE12EB76FB0011CF27 /* KTCsvParserTestCases.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
