@@ -93,32 +93,43 @@
    if (length > 0 && text != NULL) {
       // Copy the buffer data into the string.
       NSMutableData *data = [[NSMutableData alloc] init];
-      NSInteger bytesLeft = length;
+      NSInteger charactersLeft = length;
       
-      // Try reading what's left in the internal buffer.
-      NSInteger firstBufferRead = MAX_BUFFER_SIZE - _position;
-      if (firstBufferRead < 0 || firstBufferRead > MAX_BUFFER_SIZE) {
-         firstBufferRead = 0;
-      }
-      firstBufferRead = (firstBufferRead < bytesLeft) ? firstBufferRead : bytesLeft;
-      if (firstBufferRead > 0) {
-         if (_position < _bufferLength) {
-            [data appendBytes:&_buffer[_position] length:firstBufferRead];
-         }
-         bytesLeft -= firstBufferRead;
-      }
-      
-      if (bytesLeft > 0) {
-         // If the request is to NOT advance the buffer pointer
-         // then we must pre-fill the buffer.
-         if ([self fillInternalBuffer]) {
-            [data appendBytes:&_buffer[_position] length:bytesLeft];
-         }
-      }
+      // Try reading what's left in the internal buffer. We're assuming
+      // text is UTF-8 which can contain characters of 1 to 4 bytes in 
+      // size. consecutive bytes with values greater than 127 are considered
+      // to represent a single character.
+      do {
+         do {
+            NSInteger bytesLeft = 1; // Always read 1 byte.
+            NSInteger firstBufferRead = MAX_BUFFER_SIZE - _position;
+            if (firstBufferRead < 0 || firstBufferRead > MAX_BUFFER_SIZE) {
+               firstBufferRead = 0;
+            }
+            firstBufferRead = (firstBufferRead < bytesLeft) ? firstBufferRead : bytesLeft;
+            if (firstBufferRead > 0) {
+               if (_position < _bufferLength) {
+                  [data appendBytes:&_buffer[_position] length:firstBufferRead];
+               }
+               bytesLeft -= firstBufferRead;
+            }
+            
+            if (bytesLeft > 0) {
+               // If the request is to NOT advance the buffer pointer
+               // then we must pre-fill the buffer.
+               if ([self fillInternalBuffer]) {
+                  [data appendBytes:&_buffer[_position] length:bytesLeft];
+               }
+            }
+            
+            ++_position;
+         } while (_buffer[_position] > 127);
+         
+         --charactersLeft;
+      } while (charactersLeft > 0);
 
       *text = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
       [data release];
-      _position += length;
       success = YES;
    }
    

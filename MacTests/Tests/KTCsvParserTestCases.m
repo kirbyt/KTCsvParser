@@ -37,4 +37,25 @@
    }
    [parser release];
 }
+
+- (void)testExcelEllipsisBug
+{
+   // Test reading a single line.
+   NSString *csvString;
+   csvString = @"…This is…a test.,another field";
+   NSData *data = [csvString dataUsingEncoding:NSUTF8StringEncoding];
+   
+   // Simulate reading a file.
+   NSInputStream *inputStream = [NSInputStream inputStreamWithData:data];
+   KTCsvParser *parser = [[KTCsvParser alloc] initWithInputStream:inputStream];
+   while ([parser readLine]) {
+      NSArray *values = [parser values];
+      STAssertTrue([values count] == 2, @"Unexpected value count.");
+      STAssertTrue([[values objectAtIndex:0] isEqualToString:@"…This is…a test."], @"Unexpected value.");
+      STAssertTrue([[values objectAtIndex:1] isEqualToString:@"another field"], @"Unexpected value.");
+      NSLog (@"values: %@", [parser values]);
+   }
+   [parser release];
+}
+
 @end

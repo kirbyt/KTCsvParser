@@ -16,5 +16,6 @@
 
 - (void)testSimpleLineParse;
 - (void)testEmbeddedQuotes;
+- (void)testExcelEllipsisBug;
 
 @end
