@@ -183,7 +183,7 @@
 {
    int state = STATE_UNKNOWN;
    NSMutableString *value;
-   while ([self isAtEnd] == NO && [self isEndOfLine] == NO || state == STATE_CONTINUE_WITH_EMBEDDED_QUOTES_OR_COMMAS) {
+   while ([self isAtEnd] == NO && ([self isEndOfLine] == NO || state == STATE_CONTINUE_WITH_EMBEDDED_QUOTES_OR_COMMAS)) {
       
       NSString *character = nil;
       [self readNextCharacter:&character];
@@ -246,10 +246,6 @@
                }
             } else {
                [value appendString:character];
-               if ([self isEndOfLine]) {
-                  [_values addObject:value];
-                  state = STATE_UNKNOWN;
-               }
             }
             break;
          }
