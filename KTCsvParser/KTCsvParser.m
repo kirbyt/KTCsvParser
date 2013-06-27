@@ -51,7 +51,7 @@
 {
    [_reader close];
    [_reader release], _reader = nil;
-
+   
    [_values release], _values = nil;
    [_valueSeparator release], _valueSeparator = nil;
    [_quoteCharacter release], _quoteCharacter = nil;
@@ -196,16 +196,16 @@
                state = STATE_CONTINUE_WITH_EMBEDDED_QUOTES_OR_COMMAS;
             } else if ([character isEqualToString:_valueSeparator]) {
                // Empty field value.
-               [_values addObject:value];
+               [self addValue:value];
                if ([self isEndOfLine]) {
-                  [_values addObject:@""];
+                  [self addValue:@""];
                }
             } else {
                // Start of regular field value.
                [value appendString:character];
                state = STATE_CONTINUE_WITH_REGULAR_FIELD;
                if ([self isEndOfLine]) {
-                  [_values addObject:value];
+                  [self addValue:value];
                }
             }
             break;
@@ -214,16 +214,16 @@
          case STATE_CONTINUE_WITH_REGULAR_FIELD:
          {
             if ([character isEqualToString:_valueSeparator]) {
-               [_values addObject:value];
+               [self addValue:value];
                if ([self isEndOfLine]) {
-                  [_values addObject:@""];
+                  [self addValue:@""];
                } else {
                   state = STATE_UNKNOWN;
                }
             } else {
                [value appendString:character];
                if ([self isEndOfLine]) {
-                  [_values addObject:value];
+                  [self addValue:value];
                }
             }
             break;
@@ -241,7 +241,7 @@
                   }
                } else {
                   // End of value since we're at the end of the line.
-                  [_values addObject:value];
+                  [self addValue:value];
                   state = STATE_UNKNOWN;
                }
             } else {
@@ -258,7 +258,7 @@
             } else {
                // The value has a set of embedded quotes but the entire
                // value is NOT enclosed in quotes. Put the quotes back
-               // on the current value and continue processing as if a 
+               // on the current value and continue processing as if a
                // regular value.
                if ([self isEndOfLine] == NO) {
                   state = STATE_CONTINUE_WITH_REGULAR_FIELD;
@@ -294,6 +294,11 @@
    }
    
    return success;
+}
+
+- (void)addValue:(NSString *)value
+{
+   [_values addObject:value];
 }
 
 - (NSArray *)values

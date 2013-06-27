@@ -10,12 +10,5 @@
 
 
 @interface KTCsvParserTestCases : SenTestCase 
-{
-
-}
-
-- (void)testSimpleLineParse;
-- (void)testEmbeddedQuotes;
-- (void)testExcelEllipsisBug;
 
 @end

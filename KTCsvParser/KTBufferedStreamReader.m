@@ -93,7 +93,7 @@
    if (length > 0 && text != NULL) {
       // Copy the buffer data into the string.
       NSMutableData *data = [[NSMutableData alloc] init];
-      NSInteger charactersLeft = length;
+      NSUInteger charactersLeft = length;
       
       // Try reading what's left in the internal buffer. We're assuming
       // text is UTF-8 which can contain characters of 1 to 4 bytes in 
@@ -101,17 +101,17 @@
       // to represent a single character.
       do {
          do {
-            NSInteger bytesLeft = 1; // Always read 1 byte.
-            NSInteger firstBufferRead = MAX_BUFFER_SIZE - _position;
+            NSUInteger bytesLeft = 1; // Always read 1 byte.
+            NSInteger firstBufferRead = (MAX_BUFFER_SIZE - _position);
             if (firstBufferRead < 0 || firstBufferRead > MAX_BUFFER_SIZE) {
                firstBufferRead = 0;
             }
-            firstBufferRead = (firstBufferRead < bytesLeft) ? firstBufferRead : bytesLeft;
+            firstBufferRead = (firstBufferRead < (NSInteger)bytesLeft) ? firstBufferRead : (NSInteger)bytesLeft;
             if (firstBufferRead > 0) {
                if (_position < _bufferLength) {
-                  [data appendBytes:&_buffer[_position] length:firstBufferRead];
+                  [data appendBytes:&_buffer[_position] length:(NSUInteger)firstBufferRead];
                }
-               bytesLeft -= firstBufferRead;
+               bytesLeft -= (NSUInteger)firstBufferRead;
             }
             
             if (bytesLeft > 0) {

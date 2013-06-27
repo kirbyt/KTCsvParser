@@ -1,26 +1,29 @@
-KTCsvParser
-===========
+# KTCsvParser
 
 KTCsvParser is a read-only parser for comma separated value data written in Objective-C. KTCsvParser uses NSInputStream to parse the data, so it can be used to parse strings and files.
 
 KTCsvParser is not limited to comma separated values. Users of the parser can set the value separate to any character. Also, users can set the quote character used when dealing with embedded quotes.
 
-Using KTCsvParser
------------------
+## Using KTCsvParser
 
 Coming soon.
 
-To-Dos
-======
+# To-Dos
 
 * Add documentation.
 * Add unit tests.
 * Write sample Mac app.
 * Write sample iOS app.
 
+# Support, Bugs and Feature requests
 
-License
-=======
+There is absolutely **no support** offered for this project. You're on your own. If you want to submit a feature request, please do so via [the issue tracker on github](http://github.com/kirbyt/KTCsvParser/issues). Please note, however, new features will only be added if and when I have the spare time and only if I find the feature interesting.
+
+If you want to submit a bug report, please do so via the [issue tracker](http://github.com/kirbyt/KTCsvParser/issues). Include a diagnosis of the problem and a suggested fix (in code) with the report. If you're using this code, then you're a developer - so I expect you to do your homework and provide a fix along with each bug report. You can also submit pull requests or patches.
+
+Please don't submit bug reports without fixes!
+
+# License
 
 The MIT License
 

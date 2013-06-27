@@ -6,7 +6,7 @@
 //  Copyright 2011 White Peak Software Inc. All rights reserved.
 //
 
-#import "KTCsvParserTestCases.h"
+#import "KTCsvParserTests.h"
 #import "KTCsvParser.h"
 
 
