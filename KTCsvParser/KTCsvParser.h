@@ -33,6 +33,7 @@
 
 @property (nonatomic, copy) NSString *valueSeparator;
 @property (nonatomic, copy) NSString *quoteCharacter;
+@property (nonatomic, assign) BOOL trimValues;   // Removes leading and trailing spaces from each value when set to YES.
 
 - (id)initWithData:(NSData *)data;
 - (id)initWithFileAtPath:(NSString *)path;

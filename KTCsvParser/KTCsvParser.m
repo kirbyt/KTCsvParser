@@ -49,6 +49,7 @@
 {
    [self setValueSeparator:@","];
    [self setQuoteCharacter:@"\""];
+   [self setTrimValues:NO];
 }
 
 - (id)initWithData:(NSData *)data
@@ -285,7 +286,13 @@
 - (void)addValue:(NSString *)value
 {
    NSMutableArray *values = [self mutableValues];
-   [values addObject:value];
+
+   if ([self trimValues]) {
+      NSString *trimmed = [value stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+      [values addObject:trimmed];
+   } else {
+      [values addObject:value];
+   }
 }
 
 - (NSArray *)values
