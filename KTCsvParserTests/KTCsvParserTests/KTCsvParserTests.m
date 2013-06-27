@@ -22,6 +22,16 @@
    STAssertTrue([[values objectAtIndex:2] isEqualToString:@" c"], @"Unexpected value.");
 }
 
+- (void)testTrim
+{
+   NSString *csvString = @"a, b, c ";
+   NSArray *values = [KTCsvParser valuesFromCsvLine:csvString withValueSeparator:@"," trimmed:YES];
+   STAssertTrue([values count] == 3, @"Unexpected count.");
+   STAssertTrue([[values objectAtIndex:0] isEqualToString:@"a"], @"Unexpected value.");
+   STAssertTrue([[values objectAtIndex:1] isEqualToString:@"b"], @"Unexpected value.");
+   STAssertTrue([[values objectAtIndex:2] isEqualToString:@"c"], @"Unexpected value.");
+}
+
 - (void)testEmbeddedQuotes
 {
    // Test reading a single line.

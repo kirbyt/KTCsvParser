@@ -43,5 +43,6 @@
 - (NSArray *)values;
 
 + (NSArray*)valuesFromCsvLine:(NSString *)csvLineString withValueSeparator:(NSString *)valueSeparator;
++ (NSArray*)valuesFromCsvLine:(NSString *)csvLineString withValueSeparator:(NSString *)valueSeparator trimmed:(BOOL)trim;
 
 @end

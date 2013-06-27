@@ -300,10 +300,14 @@
    return [[self mutableValues] copy];
 }
 
-#pragma mark -
-#pragma mark Class Methods
+#pragma mark - Class Methods
 
 + (NSArray*)valuesFromCsvLine:(NSString *)csvLineString withValueSeparator:(NSString *)valueSeparator
+{
+   return [self valuesFromCsvLine:csvLineString withValueSeparator:valueSeparator trimmed:NO];
+}
+
++ (NSArray*)valuesFromCsvLine:(NSString *)csvLineString withValueSeparator:(NSString *)valueSeparator trimmed:(BOOL)trim
 {
    NSArray *values = nil;
    
@@ -312,6 +316,7 @@
    
    KTCsvParser *parser = [[KTCsvParser alloc] initWithInputStream:inputStream];
    [parser setValueSeparator:valueSeparator];
+   [parser setTrimValues:trim];
    if ([parser readLine]) {
       values = [parser values];
    }
