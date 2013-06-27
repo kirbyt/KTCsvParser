@@ -45,7 +45,7 @@
 
 @implementation KTCsvParser
 
-- (void)setup
+- (void)commonInit
 {
    [self setValueSeparator:@","];
    [self setQuoteCharacter:@"\""];
@@ -59,7 +59,7 @@
       NSInputStream *inputStream = [[NSInputStream alloc] initWithData:data];
       KTBufferedStreamReader *reader = [[KTBufferedStreamReader alloc] initWithInputStream:inputStream];
       [self setReader:reader];
-      [self setup];
+      [self commonInit];
    }
    return self;
 }
@@ -71,7 +71,7 @@
       NSInputStream *inputStream = [[NSInputStream alloc] initWithFileAtPath:path];
       KTBufferedStreamReader *reader = [[KTBufferedStreamReader alloc] initWithInputStream:inputStream];
       [self setReader:reader];
-      [self setup];
+      [self commonInit];
    }
    return self;
 }
@@ -82,7 +82,7 @@
    if (self) {
       KTBufferedStreamReader *reader = [[KTBufferedStreamReader alloc] initWithInputStream:inputStream];
       [self setReader:reader];
-      [self setup];
+      [self commonInit];
    }
    return self;
 }
@@ -94,7 +94,7 @@
       NSInputStream *inputStream = [[NSInputStream alloc] initWithURL:url];
       KTBufferedStreamReader *reader = [[KTBufferedStreamReader alloc] initWithInputStream:inputStream];
       [self setReader:reader];
-      [self setup];
+      [self commonInit];
    }
    return self;
 }
