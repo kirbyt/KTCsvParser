@@ -28,17 +28,20 @@
 
 #import "KTBufferedStreamReader.h"
 
+#define MAX_BUFFER_SIZE 1024
+
+@interface KTBufferedStreamReader ()
+{
+   uint8_t _buffer[MAX_BUFFER_SIZE];
+   NSInteger _position;
+   NSInteger _bufferLength;
+   BOOL _isInputStreamOpen;
+}
+@property (nonatomic, strong) NSInputStream *inputStream;
+@end
 
 
 @implementation KTBufferedStreamReader
-
-@synthesize inputStream = _inputStream;
-
-- (void)dealloc
-{
-   [_inputStream release], _inputStream = nil;
-   [super dealloc];
-}
 
 - (void)setup
 {
@@ -60,7 +63,7 @@
 - (void)open
 {
    if (_isInputStreamOpen == NO) {
-      [_inputStream open];
+      [[self inputStream] open];
       _isInputStreamOpen = YES;
    }
 }
@@ -68,17 +71,18 @@
 - (void)close
 {
    if (_isInputStreamOpen == YES) {
-      [_inputStream close];
+      [[self inputStream] close];
       _isInputStreamOpen = NO;
    }
 }
 
 - (BOOL)fillInternalBuffer
 {
+   NSInputStream *inputStream = [self inputStream];
    BOOL success = NO;
    memset(_buffer, 0, sizeof(uint8_t) * MAX_BUFFER_SIZE);
-   if ([_inputStream hasBytesAvailable] == YES) {
-      _bufferLength = [_inputStream read:_buffer maxLength:MAX_BUFFER_SIZE];
+   if ([inputStream hasBytesAvailable] == YES) {
+      _bufferLength = [inputStream read:_buffer maxLength:MAX_BUFFER_SIZE];
       _position = 0;
       success = (_bufferLength > 0);
    }
@@ -128,8 +132,7 @@
          --charactersLeft;
       } while (charactersLeft > 0);
 
-      *text = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
-      [data release];
+      *text = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
       success = YES;
    }
    

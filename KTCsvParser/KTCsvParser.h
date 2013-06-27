@@ -29,18 +29,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class KTBufferedStreamReader;
-
-@interface KTCsvParser : NSObject 
-{
-@private
-   NSString *_valueSeparator;
-   NSString *_quoteCharacter;
-   NSString *_nextCharacter;
-   
-   KTBufferedStreamReader *_reader;
-   NSMutableArray *_values;
-}
+@interface KTCsvParser : NSObject
 
 @property (nonatomic, copy) NSString *valueSeparator;
 @property (nonatomic, copy) NSString *quoteCharacter;

@@ -28,20 +28,7 @@
 
 #import <Foundation/Foundation.h>
 
-#define MAX_BUFFER_SIZE 1024
-
 @interface KTBufferedStreamReader : NSObject
-{
-@private
-   NSInputStream *_inputStream;
-   BOOL _isInputStreamOpen;
-   
-   uint8_t _buffer[MAX_BUFFER_SIZE];
-   NSInteger _position;
-   NSInteger _bufferLength;
-}
-
-@property (nonatomic, retain) NSInputStream *inputStream;
 
 - (id)initWithInputStream:(NSInputStream *)inputStream;
 

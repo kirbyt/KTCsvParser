@@ -35,7 +35,6 @@
    while ([parser readLine]) {
       NSLog (@"values: %@", [parser values]);
    }
-   [parser release];
 }
 
 - (void)testExcelEllipsisBug
@@ -55,7 +54,6 @@
       STAssertTrue([[values objectAtIndex:1] isEqualToString:@"another field"], @"Unexpected value.");
       NSLog (@"values: %@", [parser values]);
    }
-   [parser release];
 }
 
 @end

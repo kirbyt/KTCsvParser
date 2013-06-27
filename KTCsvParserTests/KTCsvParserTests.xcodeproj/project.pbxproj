@@ -10,9 +10,9 @@
 		68047222177CB7230071D2DD /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68047221177CB7230071D2DD /* SenTestingKit.framework */; };
 		68047224177CB7230071D2DD /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68047223177CB7230071D2DD /* Cocoa.framework */; };
 		6804722E177CB7230071D2DD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6804722C177CB7230071D2DD /* InfoPlist.strings */; };
-		68047231177CB7230071D2DD /* KTCsvParserTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 68047230177CB7230071D2DD /* KTCsvParserTests.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		6804723B177CB7A90071D2DD /* KTBufferedStreamReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 68047238177CB7A90071D2DD /* KTBufferedStreamReader.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		6804723C177CB7A90071D2DD /* KTCsvParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 6804723A177CB7A90071D2DD /* KTCsvParser.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		68047231177CB7230071D2DD /* KTCsvParserTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 68047230177CB7230071D2DD /* KTCsvParserTests.m */; };
+		6804723B177CB7A90071D2DD /* KTBufferedStreamReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 68047238177CB7A90071D2DD /* KTBufferedStreamReader.m */; };
+		6804723C177CB7A90071D2DD /* KTCsvParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 6804723A177CB7A90071D2DD /* KTCsvParser.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */

@@ -39,26 +39,11 @@
 
 @interface KTCsvParser ()
 @property (nonatomic, copy) NSString *nextCharacter;
+@property (nonatomic, strong) KTBufferedStreamReader *reader;
+@property (nonatomic, strong) NSMutableArray *mutableValues;
 @end
 
 @implementation KTCsvParser
-
-@synthesize valueSeparator = _valueSeparator;
-@synthesize quoteCharacter = _quoteCharacter;
-@synthesize nextCharacter = _nextCharacter;
-
-- (void)dealloc
-{
-   [_reader close];
-   [_reader release], _reader = nil;
-   
-   [_values release], _values = nil;
-   [_valueSeparator release], _valueSeparator = nil;
-   [_quoteCharacter release], _quoteCharacter = nil;
-   [_nextCharacter release], _nextCharacter = nil;
-   
-   [super dealloc];
-}
 
 - (void)setup
 {
@@ -71,8 +56,8 @@
    self = [super init];
    if (self) {
       NSInputStream *inputStream = [[NSInputStream alloc] initWithData:data];
-      _reader = [[KTBufferedStreamReader alloc] initWithInputStream:inputStream];
-      [inputStream release];
+      KTBufferedStreamReader *reader = [[KTBufferedStreamReader alloc] initWithInputStream:inputStream];
+      [self setReader:reader];
       [self setup];
    }
    return self;
@@ -83,8 +68,8 @@
    self = [super init];
    if (self) {
       NSInputStream *inputStream = [[NSInputStream alloc] initWithFileAtPath:path];
-      _reader = [[KTBufferedStreamReader alloc] initWithInputStream:inputStream];
-      [inputStream release];
+      KTBufferedStreamReader *reader = [[KTBufferedStreamReader alloc] initWithInputStream:inputStream];
+      [self setReader:reader];
       [self setup];
    }
    return self;
@@ -94,7 +79,8 @@
 {
    self = [super init];
    if (self) {
-      _reader = [[KTBufferedStreamReader alloc] initWithInputStream:inputStream];
+      KTBufferedStreamReader *reader = [[KTBufferedStreamReader alloc] initWithInputStream:inputStream];
+      [self setReader:reader];
       [self setup];
    }
    return self;
@@ -105,8 +91,8 @@
    self = [super init];
    if (self) {
       NSInputStream *inputStream = [[NSInputStream alloc] initWithURL:url];
-      _reader = [[KTBufferedStreamReader alloc] initWithInputStream:inputStream];
-      [inputStream release];
+      KTBufferedStreamReader *reader = [[KTBufferedStreamReader alloc] initWithInputStream:inputStream];
+      [self setReader:reader];
       [self setup];
    }
    return self;
@@ -120,11 +106,11 @@
    // moving forward through the buffer.
    
    BOOL success = YES;
-   if (_nextCharacter) {
-      *character = [[_nextCharacter copy] autorelease];
+   if ([self nextCharacter]) {
+      *character = [self nextCharacter];
       [self setNextCharacter:nil];
    } else {
-      success = [_reader read:character maxLength:1];
+      success = [[self reader] read:character maxLength:1];
    }
    return success;
 }
@@ -133,7 +119,7 @@
 {
    // We are at the end when we have no next character queued
    // up and the input stream reader is at it's end.
-   BOOL isAtEnd = (!_nextCharacter && [_reader isAtEnd]);
+   BOOL isAtEnd = (![self nextCharacter] && [[self reader] isAtEnd]);
    return isAtEnd;
 }
 
@@ -165,10 +151,11 @@
 
 - (void)skipNewLineCharacters
 {
-   if ([_reader isAtEnd] == NO) {
+   KTBufferedStreamReader *reader = [self reader];
+   if ([reader isAtEnd] == NO) {
       NSString *character = nil;
       [self readNextCharacter:&character];
-      if ([_reader isAtEnd] == NO) {
+      if ([reader isAtEnd] == NO) {
          NSString *nextCharacter = nil;
          [self readNextCharacter:&nextCharacter];
          [self setNextCharacter:nextCharacter];
@@ -192,9 +179,9 @@
          case STATE_UNKNOWN:
          {
             value = [NSMutableString string];
-            if ([character isEqualToString:_quoteCharacter]) {
+            if ([character isEqualToString:[self quoteCharacter]]) {
                state = STATE_CONTINUE_WITH_EMBEDDED_QUOTES_OR_COMMAS;
-            } else if ([character isEqualToString:_valueSeparator]) {
+            } else if ([character isEqualToString:[self valueSeparator]]) {
                // Empty field value.
                [self addValue:value];
                if ([self isEndOfLine]) {
@@ -213,7 +200,7 @@
             
          case STATE_CONTINUE_WITH_REGULAR_FIELD:
          {
-            if ([character isEqualToString:_valueSeparator]) {
+            if ([character isEqualToString:[self valueSeparator]]) {
                [self addValue:value];
                if ([self isEndOfLine]) {
                   [self addValue:@""];
@@ -233,7 +220,7 @@
          {
             if ([character isEqualToString:_quoteCharacter]) {
                if ([self isEndOfLine] == NO) {
-                  if (_nextCharacter && [_nextCharacter isEqualToString:_valueSeparator]) {
+                  if ([self nextCharacter] && [[self nextCharacter] isEqualToString:[self valueSeparator]]) {
                      // End of embedded comma value.
                      state = STATE_CONTINUE_WITH_REGULAR_FIELD;
                   } else {
@@ -252,7 +239,7 @@
             
          case STATE_BEGINNING_OF_EMBEDDED_QUOTES:
          {
-            if ([character isEqualToString:_quoteCharacter]) {
+            if ([character isEqualToString:[self quoteCharacter]]) {
                [value appendString:character];
                state = STATE_CONTINUE_WITH_EMBEDDED_QUOTES_OR_COMMAS;
             } else {
@@ -262,7 +249,7 @@
                // regular value.
                if ([self isEndOfLine] == NO) {
                   state = STATE_CONTINUE_WITH_REGULAR_FIELD;
-                  [value appendFormat:@"%@%@%@%@", _quoteCharacter, value, _quoteCharacter, character];
+                  [value appendFormat:@"%@%@%@%@", [self quoteCharacter], value, [self quoteCharacter], character];
                }
             }
             break;
@@ -277,14 +264,13 @@
 - (BOOL)readLine
 {
    // Clear existing values.
-   if (_values) {
-      [_values release];
-   }
-   _values = [[NSMutableArray alloc] init];
+   [self setMutableValues:nil];
+   [self setMutableValues:[[NSMutableArray alloc] init]];
    
    // Make sure the reader is open.
-   if ([_reader isOpen] == NO) {
-      [_reader open];
+   KTBufferedStreamReader *reader = [self reader];
+   if ([reader isOpen] == NO) {
+      [reader open];
    }
    
    BOOL success = NO;
@@ -298,13 +284,13 @@
 
 - (void)addValue:(NSString *)value
 {
-   [_values addObject:value];
+   NSMutableArray *values = [self mutableValues];
+   [values addObject:value];
 }
 
 - (NSArray *)values
 {
-   NSArray *values = [NSArray arrayWithArray:_values];
-   return values;
+   return [[self mutableValues] copy];
 }
 
 #pragma mark -
@@ -322,7 +308,6 @@
    if ([parser readLine]) {
       values = [parser values];
    }
-   [parser release];
    
    return values;
 }
