@@ -132,8 +132,10 @@
          --charactersLeft;
       } while (charactersLeft > 0);
 
-      *text = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-      success = YES;
+      if ([data length] > 0) {
+         *text = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+         success = YES;
+      }
    }
    
    return success;
