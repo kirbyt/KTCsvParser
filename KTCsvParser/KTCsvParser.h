@@ -33,7 +33,7 @@
 
 @property (nonatomic, copy) NSString *valueSeparator;
 @property (nonatomic, copy) NSString *quoteCharacter;
-@property (nonatomic, assign) BOOL trimValues;   // Removes leading and trailing spaces from each value when set to YES.
+@property (nonatomic, assign) BOOL ignoreLeadingWhitespaces;
 
 - (id)initWithData:(NSData *)data;
 - (id)initWithFileAtPath:(NSString *)path;
@@ -43,6 +43,7 @@
 - (NSArray *)values;
 
 + (NSArray*)valuesFromCsvLine:(NSString *)csvLineString withValueSeparator:(NSString *)valueSeparator;
-+ (NSArray*)valuesFromCsvLine:(NSString *)csvLineString withValueSeparator:(NSString *)valueSeparator trimmed:(BOOL)trim;
++ (NSArray*)valuesFromCsvLine:(NSString *)csvLineString withValueSeparator:(NSString *)valueSeparator quoteCharacter:(NSString *)quoteCharacter;
++ (NSArray*)valuesFromCsvLine:(NSString *)csvLineString withValueSeparator:(NSString *)valueSeparator quoteCharacter:(NSString *)quoteCharacter ignoreLeadingWhitespaces:(BOOL)ignoreLeadingWhitespaces;
 
 @end

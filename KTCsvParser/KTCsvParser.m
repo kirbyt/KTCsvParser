@@ -40,7 +40,7 @@
 @interface KTCsvParser ()
 @property (nonatomic, copy) NSString *nextCharacter;
 @property (nonatomic, strong) KTBufferedStreamReader *reader;
-@property (nonatomic, strong) NSMutableArray *mutableValues;
+@property (nonatomic, strong) NSMutableArray *fields;
 @end
 
 @implementation KTCsvParser
@@ -49,7 +49,7 @@
 {
    [self setValueSeparator:@","];
    [self setQuoteCharacter:@"\""];
-   [self setTrimValues:NO];
+   [self setIgnoreLeadingWhitespaces:NO];
 }
 
 - (id)initWithData:(NSData *)data
@@ -113,6 +113,7 @@
    } else {
       success = [[self reader] read:character maxLength:1];
    }
+   
    return success;
 }
 
@@ -170,7 +171,7 @@
 - (void)readLineFromReader
 {
    int state = STATE_UNKNOWN;
-   NSMutableString *value;
+   NSMutableString *field;
    while ([self isAtEnd] == NO && ([self isEndOfLine] == NO || state == STATE_CONTINUE_WITH_EMBEDDED_QUOTES_OR_COMMAS)) {
       
       NSString *character = nil;
@@ -179,21 +180,26 @@
       switch (state) {
          case STATE_UNKNOWN:
          {
-            value = [NSMutableString string];
+            field = [NSMutableString string];
             if ([character isEqualToString:[self quoteCharacter]]) {
                state = STATE_CONTINUE_WITH_EMBEDDED_QUOTES_OR_COMMAS;
             } else if ([character isEqualToString:[self valueSeparator]]) {
                // Empty field value.
-               [self addValue:value];
+               [[self fields] addObject:field];
+               // begin SH bugfix 2006-09-08
+               // (original code omitted last field)
                if ([self isEndOfLine]) {
-                  [self addValue:@""];
+                  [[self fields] addObject:@""];
                }
+               // end SH bugfix
+            } else if ([self ignoreLeadingWhitespaces] && [[NSCharacterSet whitespaceCharacterSet] characterIsMember:[character characterAtIndex:0]]) {
+               // Do nothing.
             } else {
                // Start of regular field value.
-               [value appendString:character];
+               [field appendString:character];
                state = STATE_CONTINUE_WITH_REGULAR_FIELD;
                if ([self isEndOfLine]) {
-                  [self addValue:value];
+                  [[self fields] addObject:field];
                }
             }
             break;
@@ -202,16 +208,16 @@
          case STATE_CONTINUE_WITH_REGULAR_FIELD:
          {
             if ([character isEqualToString:[self valueSeparator]]) {
-               [self addValue:value];
+               [[self fields] addObject:field];
                if ([self isEndOfLine]) {
-                  [self addValue:@""];
+                  [[self fields] addObject:@""];
                } else {
                   state = STATE_UNKNOWN;
                }
             } else {
-               [value appendString:character];
+               [field appendString:character];
                if ([self isEndOfLine]) {
-                  [self addValue:value];
+                  [[self fields] addObject:field];
                }
             }
             break;
@@ -219,9 +225,9 @@
             
          case STATE_CONTINUE_WITH_EMBEDDED_QUOTES_OR_COMMAS:
          {
-            if ([character isEqualToString:_quoteCharacter]) {
+            if ([character isEqualToString:[self quoteCharacter]]) {
                if ([self isEndOfLine] == NO) {
-                  if ([self nextCharacter] && [[self nextCharacter] isEqualToString:[self valueSeparator]]) {
+                  if ([self nextCharacter] != nil && [[self nextCharacter] isEqualToString:[self valueSeparator]]) {
                      // End of embedded comma value.
                      state = STATE_CONTINUE_WITH_REGULAR_FIELD;
                   } else {
@@ -229,11 +235,11 @@
                   }
                } else {
                   // End of value since we're at the end of the line.
-                  [self addValue:value];
+                  [[self fields] addObject:field];
                   state = STATE_UNKNOWN;
                }
             } else {
-               [value appendString:character];
+               [field appendString:character];
             }
             break;
          }
@@ -241,7 +247,7 @@
          case STATE_BEGINNING_OF_EMBEDDED_QUOTES:
          {
             if ([character isEqualToString:[self quoteCharacter]]) {
-               [value appendString:character];
+               [field appendString:character];
                state = STATE_CONTINUE_WITH_EMBEDDED_QUOTES_OR_COMMAS;
             } else {
                // The value has a set of embedded quotes but the entire
@@ -250,14 +256,14 @@
                // regular value.
                if ([self isEndOfLine] == NO) {
                   state = STATE_CONTINUE_WITH_REGULAR_FIELD;
-                  [value appendFormat:@"%@%@%@%@", [self quoteCharacter], value, [self quoteCharacter], character];
+                  [field appendFormat:@"%@%@%@%@", [self quoteCharacter], field, [self quoteCharacter], character];
                }
             }
             break;
          }
             
       } // End switch (state)
-   } // End whilte ([_reader isAtEnd]...)
+   } // End while ([reader isAtEnd]...)
    
    [self skipNewLineCharacters];
 }
@@ -265,8 +271,8 @@
 - (BOOL)readLine
 {
    // Clear existing values.
-   [self setMutableValues:nil];
-   [self setMutableValues:[[NSMutableArray alloc] init]];
+   [self setFields:nil];
+   [self setFields:[[NSMutableArray alloc] init]];
    
    // Make sure the reader is open.
    KTBufferedStreamReader *reader = [self reader];
@@ -283,31 +289,24 @@
    return success;
 }
 
-- (void)addValue:(NSString *)value
-{
-   NSMutableArray *values = [self mutableValues];
-
-   if ([self trimValues]) {
-      NSString *trimmed = [value stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-      [values addObject:trimmed];
-   } else {
-      [values addObject:value];
-   }
-}
-
 - (NSArray *)values
 {
-   return [[self mutableValues] copy];
+   return [[self fields] copy];
 }
 
 #pragma mark - Class Methods
 
 + (NSArray*)valuesFromCsvLine:(NSString *)csvLineString withValueSeparator:(NSString *)valueSeparator
 {
-   return [self valuesFromCsvLine:csvLineString withValueSeparator:valueSeparator trimmed:NO];
+   return [self valuesFromCsvLine:csvLineString withValueSeparator:valueSeparator quoteCharacter:nil ignoreLeadingWhitespaces:NO];
 }
 
-+ (NSArray*)valuesFromCsvLine:(NSString *)csvLineString withValueSeparator:(NSString *)valueSeparator trimmed:(BOOL)trim
++ (NSArray*)valuesFromCsvLine:(NSString *)csvLineString withValueSeparator:(NSString *)valueSeparator quoteCharacter:(NSString *)quoteCharacter
+{
+   return [self valuesFromCsvLine:csvLineString withValueSeparator:valueSeparator quoteCharacter:quoteCharacter ignoreLeadingWhitespaces:NO];
+}
+
++ (NSArray*)valuesFromCsvLine:(NSString *)csvLineString withValueSeparator:(NSString *)valueSeparator quoteCharacter:(NSString *)quoteCharacter ignoreLeadingWhitespaces:(BOOL)ignoreLeadingWhitespaces;
 {
    NSArray *values = nil;
    
@@ -316,7 +315,8 @@
    
    KTCsvParser *parser = [[KTCsvParser alloc] initWithInputStream:inputStream];
    [parser setValueSeparator:valueSeparator];
-   [parser setTrimValues:trim];
+   [parser setQuoteCharacter:quoteCharacter];
+   [parser setIgnoreLeadingWhitespaces:ignoreLeadingWhitespaces];
    if ([parser readLine]) {
       values = [parser values];
    }
