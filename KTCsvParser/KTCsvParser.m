@@ -306,7 +306,7 @@
    return [self valuesFromCsvLine:csvLineString withValueSeparator:valueSeparator quoteCharacter:quoteCharacter ignoreLeadingWhitespaces:NO];
 }
 
-+ (NSArray*)valuesFromCsvLine:(NSString *)csvLineString withValueSeparator:(NSString *)valueSeparator quoteCharacter:(NSString *)quoteCharacter ignoreLeadingWhitespaces:(BOOL)ignoreLeadingWhitespaces;
++ (NSArray*)valuesFromCsvLine:(NSString *)csvLineString withValueSeparator:(NSString *)valueSeparator quoteCharacter:(NSString *)quoteCharacter ignoreLeadingWhitespaces:(BOOL)ignoreLeadingWhitespaces
 {
    NSArray *values = nil;
    
