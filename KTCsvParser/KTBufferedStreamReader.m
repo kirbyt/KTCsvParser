@@ -127,7 +127,7 @@
             }
             
             ++_position;
-         } while (_buffer[_position] > 127);
+         } while (_buffer[_position] > 127 || (_buffer[_position-1] > 127 && _position == _bufferLength));
          
          --charactersLeft;
       } while (charactersLeft > 0);

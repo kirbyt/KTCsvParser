@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>42AD7389-4C26-4538-ADC9-D44F7C95296F</string>
+	<key>IDESourceControlProjectName</key>
+	<string>KTCsvParserTests</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>36F79AE7-DE9C-401F-A74C-CD7D244CC437</key>
+		<string>ssh://github.com/kirbyt/KTCsvParser.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>KTCsvParserTests/KTCsvParserTests.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>36F79AE7-DE9C-401F-A74C-CD7D244CC437</key>
+		<string>../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>ssh://github.com/kirbyt/KTCsvParser.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>36F79AE7-DE9C-401F-A74C-CD7D244CC437</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>36F79AE7-DE9C-401F-A74C-CD7D244CC437</string>
+			<key>IDESourceControlWCCName</key>
+			<string>KTCsvParser</string>
+		</dict>
+	</array>
+</dict>
+</plist>
