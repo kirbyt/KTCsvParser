@@ -99,7 +99,7 @@
    return self;
 }
 
-- (BOOL)readNextCharacter:(NSString **)character
+- (BOOL)readNextCharacter:(NSString *__autoreleasing *)character
 {
    // Retrieve the next character. Note that the
    // next character maybe queued. This allows
