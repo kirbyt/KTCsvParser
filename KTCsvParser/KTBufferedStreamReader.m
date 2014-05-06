@@ -89,7 +89,7 @@
    return success;
 }
 
-- (BOOL)read:(NSString **)text maxLength:(NSUInteger)length
+- (BOOL)read:(NSString *__autoreleasing *)text maxLength:(NSUInteger)length
 {
    NSAssert(length < MAX_BUFFER_SIZE, @"This function is not designed to retrieve data bigger than the maximum buffer size.");
    

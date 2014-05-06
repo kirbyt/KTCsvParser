@@ -34,7 +34,7 @@
 
 - (void)open;
 - (void)close;
-- (BOOL)read:(NSString **)text maxLength:(NSUInteger)length;
+- (BOOL)read:(NSString *__autoreleasing *)text maxLength:(NSUInteger)length;
 - (BOOL)isOpen;
 - (BOOL)isAtEnd;
 
