@@ -21,7 +21,7 @@ Add to your `Package.swift`:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/yourusername/CsvParser", from: "1.0.0")
+    .package(url: "https://github.com/kirbyt/KTCsvParser", from: "2.0.0")
 ]
 ```
 
