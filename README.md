@@ -272,7 +272,7 @@ To contribute to the project:
 
 The MIT License
 
-Copyright (c) 2025 Kirby Turner
+Copyright (c) 2025 Kirby Turner  
 Copyright (c) 2010-2014 White Peak Software Inc
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
