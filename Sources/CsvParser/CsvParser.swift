@@ -50,7 +50,10 @@ public class CsvParser {
     ///   - path: Path to the CSV file
     ///   - configuration: Parsing configuration
     public convenience init(path: String, configuration: CsvConfiguration = CsvConfiguration()) throws {
-        guard let inputStream = InputStream(fileAtPath: path) else {
+        guard
+            FileManager.default.fileExists(atPath: path),
+            let inputStream = InputStream(fileAtPath: path)
+        else {
             throw CsvParserError.streamError("Unable to open file at path: \(path)")
         }
         self.init(inputStream: inputStream, configuration: configuration)
